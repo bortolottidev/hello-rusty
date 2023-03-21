@@ -11,21 +11,21 @@ fn main() {
     loop {
         println!("Please input your guess:");
 
-        let mut guess = String::new();
+        let mut guess_fmt: (String, u32) = (String::new(), 0);
         io::stdin()
-            .read_line(&mut guess)
+            .read_line(&mut guess_fmt.0)
             .expect("Failed to read line");
-        let guess: u32 = match guess.trim().parse() {
+        guess_fmt.1 = match guess_fmt.0.trim().parse() {
             Ok(num) => num,
             Err(_) => {
-                println!("Please type a valid number!");
+            println!("Please type a valid number!");
                 continue;
             }
         };
 
-        println!("Your guessed: {guess}");
+        println!("Your guessed: {}", guess_fmt.1);
 
-        match guess.cmp(&secret_number) {
+        match guess_fmt.1.cmp(&secret_number) {
             Ordering::Less => println!("Too small, retry! :)"),
             Ordering::Greater => println!("Too big, retry! :)"),
             Ordering::Equal => {

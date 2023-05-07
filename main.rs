@@ -3,6 +3,7 @@ fn main() {
     print_more();
     looping();
     ownership();
+    play_with_struct();
 }
 
 fn eleven() -> u32 {
@@ -23,7 +24,7 @@ fn print_more() {
 
 fn looping() {
     let mut counter = 0;
-    
+
     let result = loop {
         counter += 1;
 
@@ -57,4 +58,47 @@ fn ownership() {
     // s3 is cloned and i can do this
     println!("{s3}");
     println!("{s4} with len {len2}");
+
+    // borrowing, not moving
+    fn calculate_length(s: &String) -> usize {
+        s.len()
+    }
+    let s1b = String::from("hello refs");
+    let len = calculate_length(&s1b);
+    println!("The length of '{}' is {}.", s1b, len);
+}
+
+struct User {
+    is_active: bool,
+    username: String,
+}
+
+struct Point(i32, i32, i32);
+
+struct UnitLikeStruct;
+
+fn play_with_struct() {
+    fn build_user(username: String) -> User {
+        User {
+            is_active: true,
+            username,
+        }
+    }
+
+    let mut user = build_user(String::from("daniele"));
+    println!("Hello {}", user.username);
+    user.username = String::from("samuele");
+    println!("Oh! What a twist! Hello {}", user.username);
+
+    // hello javascript
+    let anotherUser = User { ..user };
+    println!(
+        "Hello [active] {} [user] {}",
+        anotherUser.is_active, anotherUser.username
+    );
+
+    // cannot use this because username has been moved (see 4.1 @borrow)
+    // println!("Hello {}", user.username);
+    let point = Point(11, 42, 100);
+    let unit = UnitLikeStruct;
 }
